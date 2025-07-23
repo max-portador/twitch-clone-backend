@@ -1,29 +1,32 @@
-import { ConfigModule, ConfigService } from '@nestjs/config'
-
-import { ApolloDriver } from '@nestjs/apollo'
-import { GraphQLModule } from '@nestjs/graphql'
-import { IS_DEV_ENV } from 'src/shared/utils/isDev.util'
-import { Module } from '@nestjs/common'
-import { PrismaModule } from './prisma/prisma.module'
-import { getGraphQLConfig } from './config/graphql.config'
+import { getGraphQLConfig } from './config/graphql.config';
+import { PrismaModule } from './prisma/prisma.module';
 import { RedisModule } from './redis/redis.module';
+import { ApolloDriver } from '@nestjs/apollo';
+import { Module } from '@nestjs/common';
+import { ConfigModule, ConfigService } from '@nestjs/config';
+import { GraphQLModule } from '@nestjs/graphql';
+import { AccountModule } from 'src/modules/auth/account/account.module';
+import { SessionModule } from 'src/modules/auth/session/session.module';
+import { IS_DEV_ENV } from 'src/shared/utils/isDev.util';
 
 @Module({
 	imports: [
 		ConfigModule.forRoot({
 			ignoreEnvFile: !IS_DEV_ENV,
-			isGlobal: true
+			isGlobal: true,
 		}),
 		GraphQLModule.forRootAsync({
 			driver: ApolloDriver,
 			imports: [ConfigModule],
 			useFactory: getGraphQLConfig,
-			inject: [ConfigService]
+			inject: [ConfigService],
 		}),
 		PrismaModule,
-		RedisModule
+		RedisModule,
+		AccountModule,
+		SessionModule,
 	],
 	controllers: [],
-	providers: []
+	providers: [],
 })
 export class CoreModule {}
