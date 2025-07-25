@@ -8,6 +8,16 @@ import { PrismaService } from 'src/core/prisma/prisma.service';
 export class AccountService {
 	public constructor(private readonly prismaService: PrismaService) {}
 
+	public async me(id: string) {
+		const user = await this.prismaService.user.findUnique({
+			where: {
+				id,
+			},
+		});
+
+		return user;
+	}
+
 	public async findAll() {
 		return this.prismaService.user.findMany();
 	}
