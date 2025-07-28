@@ -24,7 +24,7 @@ async function bootstrap() {
 	);
 
 	app.enableCors({
-		origin: 'https://portador.duckdns.org', // config.getOrThrow<string>('ALLOW_ORIGIN'),
+		origin: '*', // config.getOrThrow<string>('ALLOW_ORIGIN'),
 
 		credentials: true,
 		exposeHeaders: ['set-cookie'],
@@ -45,7 +45,7 @@ async function bootstrap() {
 				secure: parseBoolean(
 					config.getOrThrow<string>('SESSION_SECURE'),
 				),
-				sameSite: 'none', // config.getOrThrow<'lax' | 'none' | 'strict'>('SAME_SITE',),
+				sameSite: 'lax', // config.getOrThrow<'lax' | 'none' | 'strict'>('SAME_SITE',),
 			},
 			store: new RedisStore({
 				client: redis,
