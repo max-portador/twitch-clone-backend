@@ -1,5 +1,3 @@
-import { join } from 'path';
-
 import type { MailerOptions } from '@nestjs-modules/mailer';
 import { ConfigService } from '@nestjs/config';
 

@@ -1,8 +1,10 @@
 import { Field, ID, ObjectType } from '@nestjs/graphql';
+
 import { User } from '@prisma/generated';
 
 @ObjectType({})
 export class UserModel implements User {
+	
 	@Field(() => ID)
 	id: string;
 
@@ -32,4 +34,10 @@ export class UserModel implements User {
 
 	@Field(() => Date)
 	UpdatePrismaDto: Date;
+
+	@Field(() => Boolean)
+	isVerified: boolean;
+
+	@Field(() => Boolean)
+	isEmailVerified: boolean;
 }

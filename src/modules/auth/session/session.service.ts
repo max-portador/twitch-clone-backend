@@ -1,14 +1,3 @@
-import { verify } from 'argon2';
-import type { Request as ExpressRequest } from 'express';
-import { SessionData } from 'express-session';
-
-import { PrismaService } from '@/src/core/prisma/prisma.service';
-import { RedisService } from '@/src/core/redis/redis.service';
-import { getSessionMetadata } from '@/src/shared/utils/session-metadata.utils';
-
-import { LoginInput } from './inputs/login.input';
-import { SessionModel } from './models/session.model';
-import { sortByCreatedAt } from './utils/sort.utils';
 import {
 	ConflictException,
 	Injectable,
@@ -16,7 +5,18 @@ import {
 	NotFoundException,
 	UnauthorizedException,
 } from '@nestjs/common';
+import { destroySession, saveSession } from '@/src/shared/utils/session.util';
+
 import { ConfigService } from '@nestjs/config';
+import { ExpressRequest } from '@/src/shared/types';
+import { LoginInput } from './inputs/login.input';
+import { PrismaService } from '@/src/core/prisma/prisma.service';
+import { RedisService } from '@/src/core/redis/redis.service';
+import { SessionData } from 'express-session';
+import { SessionModel } from './models/session.model';
+import { getSessionMetadata } from '@/src/shared/utils/session-metadata.utils';
+import { sortByCreatedAt } from './utils/sort.utils';
+import { verify } from 'argon2';
 
 @Injectable()
 export class SessionService {
@@ -114,45 +114,10 @@ export class SessionService {
 
 		const metadata = getSessionMetadata(request, userAgent);
 
-		return new Promise((resolve, reject) => {
-			request.session.createdAt = new Date();
-			request.session.userId = user.id;
-			request.session.metadata = metadata;
-
-			request.session.save(err => {
-				if (err) {
-					reject(
-						new InternalServerErrorException(
-							'Не удалось сохранить сессию',
-						),
-					);
-				}
-
-				resolve(user);
-			});
-		});
+		return saveSession(request, user, metadata)
 	}
 	public async logout(request: ExpressRequest) {
-		return new Promise((resolve, reject) => {
-			request.session.destroy(err => {
-				if (err) {
-					reject(
-						new InternalServerErrorException(
-							'Не удалось завершить сессию',
-						),
-					);
-				}
-
-				if (!request.res?.clearCookie) {
-					console.debug('No clear method');
-				}
-				request.res?.clearCookie(
-					this.configService.getOrThrow<string>('SESSION_NAME'),
-				);
-
-				resolve(true);
-			});
-		});
+		return destroySession(request, this.configService)
 	}
 
 	public clearSession(req: ExpressRequest) {
