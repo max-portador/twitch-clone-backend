@@ -1,15 +1,17 @@
-import { ConfigModule, ConfigService } from '@nestjs/config';
+import { MailModule } from '../libs/mail/mail.module';
+import { RecoveryModule } from '../modules/auth/recovery/recovery.module';
+import { VerificationModule } from '../modules/auth/verification/verification.module';
 
-import { AccountModule } from 'src/modules/auth/account/account.module';
-import { ApolloDriver } from '@nestjs/apollo';
-import { GraphQLModule } from '@nestjs/graphql';
-import { IS_DEV_ENV } from 'src/shared/utils/isDev.util';
-import { Module } from '@nestjs/common';
+import { getGraphQLConfig } from './config/graphql.config';
 import { PrismaModule } from './prisma/prisma.module';
 import { RedisModule } from './redis/redis.module';
+import { ApolloDriver } from '@nestjs/apollo';
+import { Module } from '@nestjs/common';
+import { ConfigModule, ConfigService } from '@nestjs/config';
+import { GraphQLModule } from '@nestjs/graphql';
+import { AccountModule } from 'src/modules/auth/account/account.module';
 import { SessionModule } from 'src/modules/auth/session/session.module';
-import { VerificationModule } from '../modules/auth/verification/verification.module';
-import { getGraphQLConfig } from './config/graphql.config';
+import { IS_DEV_ENV } from 'src/shared/utils/isDev.util';
 
 @Module({
 	imports: [
@@ -28,6 +30,8 @@ import { getGraphQLConfig } from './config/graphql.config';
 		AccountModule,
 		SessionModule,
 		VerificationModule,
+		MailModule,
+		RecoveryModule,
 	],
 	controllers: [],
 	providers: [],

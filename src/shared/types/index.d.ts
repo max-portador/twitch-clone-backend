@@ -1,1 +1,4 @@
-export type {Request as ExpressRequest} from 'express'
+export type {
+	Request as ExpressRequest,
+	Response as ExpressResponse,
+} from 'express';

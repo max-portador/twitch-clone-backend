@@ -21,7 +21,7 @@ model User {
 
   isVerified      Boolean @default(false) @map("is_verified")
   isEmailVerified Boolean @default(false) @map("is_email_verified")
-  
+
   tokens          Token[]
 
   createdAt DateTime @default(now()) @map("created_at")
@@ -49,6 +49,7 @@ model Token {
 
 enum TokenType {
   EMAIL_VERIFY
+  PASSWORD_RESET
 
   @@map("token_types")
 }

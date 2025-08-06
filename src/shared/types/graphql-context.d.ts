@@ -1,7 +1,4 @@
-import type {
-	Request as ExpressRequest,
-	Response as ExpressResponse,
-} from 'express';
+import type { ExpressRequest, ExpressResponse } from '.';
 
 export interface GraphqlContext {
 	req: ExpressRequest;
